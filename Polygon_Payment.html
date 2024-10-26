@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Books4U</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .payment-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .status {
+            margin-top: 20px;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>Payment</h1>
+    </header>
+
+    <div class="payment-container">
+        <h2>Processing Your Payment...</h2>
+        <p id="payment-status" class="status"></p>
+        <button id="retry-btn" class="submit-btn" style="display: none;">Retry Payment</button>
+    </div>
+
+    <script>
+        async function processPayment(paymentData) {
+            if (typeof window.ethereum !== 'undefined') {
+                const web3 = new Web3(window.ethereum);
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const accounts = await web3.eth.getAccounts();
+                const senderAddress = accounts[0];
+
+                const amountInEth = web3.utils.toWei((paymentData.total / 100).toFixed(4), 'ether'); // Amount to pay in Ether
+                const tokenAddress = '0xYourTokenAddress'; // Replace with your token contract address
+                const recipientAddress = '0xRecipientAddress'; // Replace with your receiving address
+
+                const tokenContract = new web3.eth.Contract([
+                    {
+                        "constant": false,
+                        "inputs": [
+                            {
+                                "name": "_to",
+                                "type": "address"
+                            },
+                            {
+                                "name": "_value",
+                                "type": "uint256"
+                            }
+                        ],
+                        "name": "transfer",
+                        "outputs": [
+                            {
+                                "name": "",
+                                "type": "bool"
+                            }
+                        ],
+                        "payable": false,
+                        "stateMutability": "nonpayable",
+                        "type": "function"
+                    }
+                ], tokenAddress);
+
+                try {
+                    const gasEstimate = await tokenContract.methods.transfer(recipientAddress, amountInEth).estimateGas({ from: senderAddress });
+                    await tokenContract.methods.transfer(recipientAddress, amountInEth).send({ from: senderAddress, gas: gasEstimate });
+                    return { success: true, message: "Payment processed successfully!" };
+                } catch (error) {
+                    console.error(error);
+                    throw new Error("Payment failed.");
+                }
+            } else {
+                throw new Error("Please install MetaMask to use this feature.");
+            }
+        }
+
+        // Get payment data from URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const paymentData = JSON.parse(decodeURIComponent(params.get('data')));
+
+        // Process payment
+        processPayment(paymentData).then(response => {
+            document.getElementById('payment-status').textContent = response.message;
+        }).catch(error => {
+            document.getElementById('payment-status').textContent = error;
+            document.getElementById('retry-btn').style.display = 'block'; // Show retry button
+        });
+
+        // Retry payment button functionality
+        document.getElementById('retry-btn').addEventListener('click', () => {
+            processPayment(paymentData).then(response => {
+                document.getElementById('payment-status').textContent = response.message;
+            }).catch(error => {
+                document.getElementById('payment-status').textContent = error;
+            });
+        });
+    </script>
+</body>
+</html>

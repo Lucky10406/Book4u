@@ -1,0 +1,167 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Books4U</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+        }
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .checkout-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .checkout-container h2 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .cart-items {
+            margin-bottom: 20px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .cart-total {
+            font-weight: bold;
+            text-align: right;
+            margin-top: 10px;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Checkout</h1>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="buy.html">Buy Books</a>
+            <a href="resell.html">Resell Books</a>
+            <a href="contact-us.html">Contact Us</a>
+        </div>
+        <div class="cart">
+            <span class="cart-icon">🛒</span>
+            <span class="cart-count">0</span>
+        </div>
+    </nav>
+
+    <!-- Checkout Section -->
+    <div class="checkout-container">
+        <h2>Billing Information</h2>
+        <form id="checkout-form" action="Payment.html" method="GET">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Shipping Address</label>
+                <textarea id="address" rows="3" required></textarea>
+            </div>
+            <h3>Your Items:</h3>
+            <div class="cart-items"></div>
+            <div class="cart-total">Total: $<span id="total-amount">0</span></div>
+            <!-- Hidden input to store the total amount -->
+            <input type="hidden" id="total-amount-input" name="total">
+            <button type="submit" class="submit-btn">Proceed to Payment</button>
+        </form>
+    </div>
+
+    <script>
+        // Fetch cart data from localStorage
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Function to display cart items and total in the checkout page
+        function updateCheckoutDisplay() {
+            const cartItemsContainer = document.querySelector('.cart-items');
+            const cartTotalDisplay = document.querySelector('.cart-total');
+            const totalAmountInput = document.getElementById('total-amount-input');
+            const totalDisplay = document.getElementById('total-amount');
+            let total = 0;
+
+            cartItemsContainer.innerHTML = '';  // Clear existing items
+            cart.forEach(item => {
+                total += item.price;
+                cartItemsContainer.innerHTML += `
+                    <div class="cart-item">
+                        <span>${item.name}</span>
+                        <span>$${item.price}</span>
+                    </div>`;
+            });
+
+            cartTotalDisplay.textContent = `Total: $${total}`;
+            totalAmountInput.value = total;  // Set hidden input value
+            totalDisplay.textContent = total; // Update total amount display
+        }
+
+        // Call the function to update the checkout display on load
+        updateCheckoutDisplay();
+    </script>
+
+</body>
+</html>

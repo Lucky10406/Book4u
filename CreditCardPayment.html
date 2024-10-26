@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Card Payment - Books4U</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .payment-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+    <div class="payment-container">
+        <h2>Pay with Razorpay</h2>
+        <button id="pay-button">Pay Now</button>
+    </div>
+
+    <script>
+        document.getElementById('pay-button').onclick = function() {
+            const totalAmount = localStorage.getItem('totalAmount'); // Get total amount
+            
+            // Make an API call to your backend to create an order
+            fetch('/api/create-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ amount: totalAmount })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const options = {
+                    key: 'OPHbfeL7nthoJd',
+                    amount: data.amount, // Amount is in paise
+                    currency: 'INR',
+                    name: 'Books4U',
+                    description: 'Purchase Description',
+                    order_id: data.id, // Order ID created in your backend
+                    handler: function (response) {
+                        // Handle the payment response here
+                        alert('Payment successful! Transaction ID: ' + response.razorpay_payment_id);
+                        // You can redirect or display a success message
+                        window.location.href = `payment-success.html?paymentId=${response.razorpay_payment_id}&total=${totalAmount}`;
+                    },
+                    prefill: {
+                        name: 'Customer Name',
+                        email: 'customer@example.com',
+                        contact: '9999999999'
+                    },
+                    theme: {
+                        color: '#4CAF50'
+                    }
+                };
+                const razorpay = new Razorpay(options);
+                razorpay.open();
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Error creating payment order');
+            });
+        };
+    </script>
+
+</body>
+</html>

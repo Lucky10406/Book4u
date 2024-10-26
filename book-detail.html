@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Detail - Book Bazaar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #333;
+            overflow: hidden;
+        }
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #575757;
+        }
+        .book-detail {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .book-detail img {
+            max-width: 100%;
+        }
+        .buy-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .buy-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Book Bazaar</h1>
+        <p>Book Details</p>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="resell.html">Sell Books</a>
+        <a href="buy.html">Buy Books</a>
+        <a href="Cart.html">Cart</a>
+    </nav>
+
+    <!-- Book Detail Section -->
+    <div class="book-detail">
+        <img id="book-image" src="" alt="Book Image">
+        <h2 id="book-title"></h2>
+        <p id="book-price"></p>
+        <p id="book-description"></p>
+        <p><strong>Condition:</strong> <span id="book-condition"></span></p>
+        <button class="buy-button" onclick="addToCart()">Add to Cart</button>
+    </div>
+
+    <script>
+        // Get URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const title = params.get('title');
+        const price = params.get('price');
+        const image = params.get('image');
+        const description = params.get('description');
+        const condition = params.get('condition');
+
+        // Set book details
+        document.getElementById('book-title').innerText = title;
+        document.getElementById('book-price').innerText = `$${price}`;
+        document.getElementById('book-image').src = image;
+        document.getElementById('book-description').innerText = description;
+        document.getElementById('book-condition').innerText = condition;
+
+        // Cart management
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Add book to cart
+        function addToCart() {
+            const book = {
+                name: title,
+                price: parseFloat(price),
+                image: image
+            };
+
+            cart.push(book);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${title} has been added to your cart!`);
+        }
+    </script>
+</body>
+</html>

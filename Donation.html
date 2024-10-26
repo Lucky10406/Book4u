@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate Books - Book Bazaar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .description {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .description img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select, textarea {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .submit-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Donate Books to NGOs</h1>
+    </header>
+
+    <!-- Container Section -->
+    <div class="container">
+        
+        <!-- Description Section -->
+        <div class="description">
+            <h2>Make a Difference by Donating Your Books!</h2>
+            <p>Help spread knowledge and joy by donating your used books to NGOs dedicated to education and community support. Fill out the form below to let us know how many books you're donating and which NGO you would like to support.</p>
+        </div>
+
+        <!-- Donation Form Section -->
+        <!-- The form will now redirect to thank-you.html upon submission -->
+        <form action="Thank YOu for donation.html" method="GET">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+
+            <label for="ngo">Select the NGO:</label>
+            <select id="ngo" name="ngo" required>
+                <option value="">Choose an NGO...</option>
+                <option value="Education for All">Education for All</option>
+                <option value="Books for Smiles">Books for Smiles</option>
+                <option value="Read and Rise">Read and Rise</option>
+                <option value="Helping Hands Library">Helping Hands Library</option>
+            </select>
+
+            <label for="book-count">Number of Books Donating:</label>
+            <input type="number" id="book-count" name="book-count" placeholder="Enter the number of books" required min="1">
+
+            <label for="message">Message or Special Instructions:</label>
+            <textarea id="message" name="message" rows="4" placeholder="Any special notes or instructions for the donation"></textarea>
+
+            <button type="submit" class="submit-button">Submit Donation</button>
+        </form>
+    </div>
+
+</body>
+</html>
+

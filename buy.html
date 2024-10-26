@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Books - Book Bazaar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            background-color: #333;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            margin: 0 10px;
+        }
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .buy-books {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .buy-books h2 {
+            text-align: center;
+            color: #333;
+        }
+        .buy-books .book-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .buy-books .book-item img {
+            max-width: 200px;
+            margin-right: 10px;
+        }
+        .buy-books .book-item p {
+            margin: 0;
+        }
+        .buy-list {
+            margin-top: 20px;
+        }
+        .featured-books {
+            margin: 20px 0;
+        }
+        .featured-books h3 {
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Book Bazaar</h1>
+        <p>Buy Your Favorite Books Here!</p>
+    </header>
+
+    <nav>
+        <a href="index.html">Home</a>  
+        <a href="resell.html">Resell Books</a>
+        <a href="contact-us.html">Contact Us</a> </nav>
+
+    <!-- Buy Books Section -->
+    <div class="buy-books">
+        <h2>Available Books for Sale</h2>
+        <form id="buy-form">
+            
+        
+        <!-- Featured Books Section -->
+        <div class="featured-books">
+            <h3>Featured Books</h3>
+            <div id="featured-book-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // Featured books data
+        const featuredBooks = [
+            { title: "The Great Gatsby", price: 10, image: "https://via.placeholder.com/100" },
+            { title: "Atomic Habits", price: 12, image: "https://imgs.search.brave.com/zQNDNTzlZxfrp9vvWPXe0Y-wz7VQ_UcJF8wMNzdzY3o/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jdWx0/aXZhdGV3aGF0bWF0/dGVycy5jb20vY2Ru/L3Nob3AvYXJ0aWNs/ZXMvYXRvbWljLWhh/Yml0cy5qcGc_dj0x/NjI0ODI3NTA4Jndp/ZHRoPTExMDA" },
+            { title: "To Kill a Mockingbird", price: 8, image: "https://via.placeholder.com/100" },
+            { title: "Harry Potter", price: 15, image: "https://via.placeholder.com/100" },
+            { title: "The Catcher in the Rye", price: 14, image: "https://via.placeholder.com/100" },
+            { title: "The Hobbit", price: 9, image: "https://via.placeholder.com/100" },
+            { title: "1984", price: 11, image: "https://via.placeholder.com/100" },
+        ];
+
+        // Display featured books
+        // Display featured books
+function displayFeaturedBooks() {
+    const featuredBookList = document.getElementById('featured-book-list');
+    featuredBooks.forEach(book => {
+        const bookItem = document.createElement('div');
+        bookItem.classList.add('book-item');
+        bookItem.innerHTML = `
+            <img src="${book.image}" alt="${book.title}">
+            <div>
+                <p>
+                    <a href="book-detail.html?title=${encodeURIComponent(book.title)}&price=${book.price}&image=${encodeURIComponent(book.image)}&description=This is a detailed description of ${encodeURIComponent(book.title)}.&condition=New">
+                        <strong>${book.title}</strong> - $${book.price}
+                    </a>
+                </p>
+            </div>
+        `;
+        featuredBookList.appendChild(bookItem);
+    });
+}
+
+
+        // Handle buy form submission
+        document.getElementById('buy-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting
+
+            const title = document.getElementById('buy-title').value;
+            const price = document.getElementById('buy-price').value;
+            const imageFile = document.getElementById('buy-image').files[0];
+            const contact = document.getElementById('buy-contact').value;
+
+            // Create a FileReader to read the image file
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Create a new book item for the buy books list
+                const buyItem = document.createElement('div');
+                buyItem.classList.add('book-item');
+                buyItem.innerHTML = `
+                    <img src="${e.target.result}" alt="${title}">
+                    <div>
+                        <p><strong>${title}</strong> - $${price}</p>
+                        <p>Contact: ${contact}</p>
+                    </div>
+                `;
+                document.querySelector('.buy-list').appendChild(buyItem);
+            };
+            // Read the image file as a data URL
+            if (imageFile) {
+                reader.readAsDataURL(imageFile);
+            }
+
+            // Clear the form inputs
+            document.getElementById('buy-title').value = '';
+            document.getElementById('buy-price').value = '';
+            document.getElementById('buy-image').value = '';
+            document.getElementById('buy-contact').value = '';
+        });
+
+        // Load featured books on page load
+        window.onload = function() {
+            displayFeaturedBooks(); // Display all featured books
+        };
+    </script>
+</body>
+</html>

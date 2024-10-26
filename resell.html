@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resell Books - Book Bazaar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            background-color: #333;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #555;
+        }
+        .resell-books {
+            max-width: 700px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .resell-books h2 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .resell-books input[type="text"],
+        .resell-books input[type="number"],
+        .resell-books input[type="file"],
+        .resell-books input[type="submit"],
+        .resell-books textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .resell-books input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-size: 18px;
+        }
+        .resell-books input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .resell-list {
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        .resell-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .resell-item:last-child {
+            border-bottom: none;
+        }
+        .resell-item img {
+            width: 80px;
+            height: auto;
+            margin-right: 20px;
+            border-radius: 6px;
+            object-fit: cover;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .resell-item div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .resell-item p {
+            margin: 0;
+            font-size: 16px;
+            color: #555;
+        }
+        .resell-item p.title {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Book Bazaar</h1>
+        <p>Resell Your Used Books Here!</p>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="buy.html">Buy Books</a>
+        <a href="contact-us.html">Contact Us</a>
+        <a href="Donation.html">Donation</a>
+    </nav>
+
+    <!-- Resell Books Section -->
+    <div class="resell-books">
+        <h2>Resell Your Books</h2>
+        <form id="resell-form">
+            <input type="text" id="resell-title" placeholder="Book Title" required>
+            <input type="number" id="resell-price" placeholder="Price ($)" required>
+            <input type="file" id="resell-image" accept="image/jpeg, image/png" required>
+            <input type="text" id="resell-contact" placeholder="Your Contact Number" required>
+            <textarea id="book-description" placeholder="Enter book's description" rows="4" required></textarea>
+            <input type="submit" value="Resell Book">
+        </form>
+        <div class="resell-list"></div>
+        <p>Your Book will be listed in Buy Books section once it has been checked  by us </p>
+        <p>We will inform you when it gets uploaded for Sell.</p>
+    </div>
+
+    <script>
+        // Handle resell form submission
+        document.getElementById('resell-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const title = document.getElementById('resell-title').value;
+            const price = document.getElementById('resell-price').value;
+            const imageFile = document.getElementById('resell-image').files[0];
+            const contact = document.getElementById('resell-contact').value;
+            const description = document.getElementById('book-description').value;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const resellItem = document.createElement('div');
+                resellItem.classList.add('resell-item');
+                resellItem.innerHTML = `
+                    <img src="${e.target.result}" alt="${title}">
+                    <div>
+                        <p class="title">${title} - $${price}</p>
+                        <p>Contact: ${contact}</p>
+                        <p>${description}</p>
+                    </div>
+                `;
+                document.querySelector('.resell-list').appendChild(resellItem);
+            };
+
+            if (imageFile) {
+                reader.readAsDataURL(imageFile);
+            }
+
+            // Clear form inputs
+            document.getElementById('resell-title').value = '';
+            document.getElementById('resell-price').value = '';
+            document.getElementById('resell-image').value = '';
+            document.getElementById('resell-contact').value = '';
+            document.getElementById('book-description').value = '';
+        });
+    </script>
+</body>
+</html>

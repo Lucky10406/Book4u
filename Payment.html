@@ -1,0 +1,102 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Books4U</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .payment-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .payment-option {
+            margin-bottom: 15px;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="processPayment.js"></script>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Select Payment Method</h1>
+    </header>
+
+    <!-- Payment Section -->
+    <div class="payment-container">
+        <div class="payment-option">
+            <h3>Pay with Credit Card</h3>
+            <a id="creditCardLink" class="submit-btn">Proceed to Credit Card Payment</a>
+        </div>
+        <div class="payment-option">
+            <h3>Pay with Polygon</h3>
+            <button class="submit-btn" onclick="payWithPolygon()">Pay with Polygon</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to set the Credit Card Payment link with the total amount
+        const total = new URLSearchParams(window.location.search).get('total');
+        document.getElementById('creditCardLink').setAttribute('href', `CreditCardPayment.html?total=${total}`);
+
+        async function payWithPolygon() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    const account = accounts[0];
+
+                    const transactionParameters = {
+                        to: '0xe52Dc9E9A832453deD814b107c47a1601551C21F',
+                        from: account,
+                        value: (total * 1e18).toString(16),
+                        gas: '21000',
+                    };
+
+                    const txHash = await window.ethereum.request({
+                        method: 'eth_sendTransaction',
+                        params: [transactionParameters],
+                    });
+
+                    alert(`Payment successful with Polygon! Transaction Hash: ${txHash}`);
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error(error);
+                    alert('Payment failed. Please try again.');
+                }
+            } else {
+                alert('Please install MetaMask to use Polygon payments.');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - Books4U</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+        }
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .cart {
+            position: relative;
+            display: flex;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+        }
+        .cart-icon {
+            margin-left: 10px;
+        }
+        .cart-count {
+            background-color: red;
+            border-radius: 50%;
+            padding: 5px 10px;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 12px;
+        }
+        .cart-page {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .cart-page h2 {
+            text-align: center;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .cart-item button {
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        .cart-item button:hover {
+            background-color: darkred;
+        }
+        .cart-total {
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: right;
+        }
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .checkout-btn:hover {
+            background-color: #45a049;
+        }
+        .empty-cart {
+            text-align: center;
+            color: #888;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Your Cart</h1>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="buy.html">Buy Books</a>
+            <a href="resell.html">Resell Books</a>
+            <a href="contact-us.html">Contact Us</a>
+        </div>
+        <div class="cart">
+            <span class="cart-icon">🛒</span>
+            <span class="cart-count">0</span>
+        </div>
+    </nav>
+
+    <!-- Cart Page Section -->
+    <div class="cart-page">
+        <h2>Your Selected Books</h2>
+        <div class="cart-items"></div>
+        <div class="cart-total">Total: $0</div>
+        <button class="checkout-btn">Proceed to Checkout</button>
+    </div>
+
+    <div class="empty-cart" style="display:none;">
+        <h3>Your cart is empty!</h3>
+        <p>It looks like you haven't added any items to your cart yet.</p>
+    </div>
+
+    <script>
+        // Simulate fetching the cart data (retrieved from localStorage)
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Function to update the cart display
+        function updateCartPage() {
+            const cartItemsContainer = document.querySelector('.cart-items');
+            const cartTotalDisplay = document.querySelector('.cart-total');
+            const cartCount = document.querySelector('.cart-count');
+            const emptyCartMessage = document.querySelector('.empty-cart');
+            let total = 0;
+
+            cartItemsContainer.innerHTML = '';  // Clear existing items
+            if (cart.length === 0) {
+                // If cart is empty
+                emptyCartMessage.style.display = 'block';
+                document.querySelector('.cart-page').style.display = 'none';
+            } else {
+                // If cart has items
+                emptyCartMessage.style.display = 'none';
+                document.querySelector('.cart-page').style.display = 'block';
+
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    cartItemsContainer.innerHTML += `
+                        <div class="cart-item">
+                            <span>${item.name}</span>
+                            <span>$${item.price}</span>
+                            <button onclick="removeFromCart(${index})">Remove</button>
+                        </div>`;
+                });
+
+                cartTotalDisplay.textContent = `Total: $${total}`;
+                cartCount.textContent = cart.length;  // Update item count in the cart icon
+            }
+        }
+
+        // Function to remove item from cart
+        function removeFromCart(index) {
+            cart.splice(index, 1); // Remove item from cart array
+            localStorage.setItem('cart', JSON.stringify(cart)); // Update localStorage
+            updateCartPage(); // Update the display
+        }
+
+        // Event listener for checkout button
+        document.querySelector('.checkout-btn').addEventListener('click', function() {
+            // Redirect to the checkout page
+            window.location.href = 'checkout.html';
+        });
+
+        // Call the function to update the cart page on load
+        updateCartPage();
+    </script>
+
+</body>
+</html>
